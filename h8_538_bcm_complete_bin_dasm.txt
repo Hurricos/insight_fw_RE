@@ -1344,16 +1344,20 @@
 0:10dd: 20 fe              BRA      H'10DD
 0:10df: 20 fe              BRA      H'10DF
 0:10e1: 20 fe              BRA      H'10E1
-0:10e3: 15 fe cc d5        BCLR.B   #5, @H'FECC:16
-0:10e7: 15 fe cc d4        BCLR.B   #4, @H'FECC:16
-0:10eb: 27 14              BEQ      H'1101
-0:10ed: 15 fe cc d3        BCLR.B   #3, @H'FECC:16
-0:10f1: bf 90              MOV.W    R0, @-SP
-0:10f3: bf 91              MOV.W    R1, @-SP
-0:10f5: 15 fe cd 80        MOV.B    @H'FECD:16, R0
-0:10f9: 26 6c              BNE      H'1167
-0:10fb: 15 fe ca d6        BCLR.B   #6, @H'FECA:16
-0:10ff: 20 66              BRA      H'1167
+                                                    ; SSR: page=370
+0:10e3: 15 fe cc d5        BCLR.B   #5, @H'FECC:16  ; Clear SSR Overrun Error (ORER)
+0:10e7: 15 fe cc d4        BCLR.B   #4, @H'FECC:16  ; Pop SSR Receive Framing Error (FER)
+0:10eb: 27 14              BEQ      H'1101          ; If FER was set, B 1101
+0:10ed: 15 fe cc d3        BCLR.B   #3, @H'FECC:16  ; Pop(?) SSR Parity Error (PER)
+0:10f1: bf 90              MOV.W    R0, @-SP        ; Move R0 onto the stack
+0:10f3: bf 91              MOV.W    R1, @-SP        ; Move R1 onto the stack
+0:10f5: 15 fe cd 80        MOV.B    @H'FECD:16, R0  ; Copy SCI1 RDR into R0
+  ; I see nothing that consumes this byte.
+0:10f9: 26 6c              BNE      H'1167          ; ... and if no parity error, B 1167
+                                                    ; SCR: page=366
+0:10fb: 15 fe ca d6        BCLR.B   #6, @H'FECA:16  ; Re-enable RX interrupts.
+  ; So: a byte was received on SCI1; we check for errors; if parity error, leave RX interrupts disabled.
+0:10ff: 20 66              BRA      H'1167          ;; Cleanup for this interrupt.
 0:1101: bf 90              MOV.W    R0, @-SP
 0:1103: bf 91              MOV.W    R1, @-SP
 0:1105: 15 fe cd 80        MOV.B    @H'FECD:16, R0
@@ -1388,9 +1392,10 @@
 0:115d: 27 fa              BEQ      H'1159
 0:115f: 15 fe cb 90        MOV.B    R0, @H'FECB:16
 0:1163: 15 fe cc d7        BCLR.B   #7, @H'FECC:16
-0:1167: cf 81              MOV.W    @SP+, R1
-0:1169: cf 80              MOV.W    @SP+, R0
-0:116b: 0a                 RTE
+  ;; 0:1167: Pop R1, R0 off stack and return from exception.
+0:1167: cf 81              MOV.W    @SP+, R1        ; Pop R1
+0:1169: cf 80              MOV.W    @SP+, R0        ; Pop R0
+0:116b: 0a                 RTE                      ; ... return from exception handling.
 0:116c: 15 fe cc d7        BCLR.B   #7, @H'FECC:16
 0:1170: 0a                 RTE
 0:1171: 20 fe              BRA      H'1171
