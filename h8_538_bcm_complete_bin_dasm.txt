@@ -65,6 +65,9 @@
 0:008a: 10 df ff           JMP      @H'DFFF
 0:008d: ff                 .DATA.B  H'FF
 0:008e: 10 e1 10           JMP      @H'E110
+  ; Actually, these aren't instructions but raw addresses.
+  ; They are loaded raw (page=117, item 3) into the PC when the exception occurs.
+  ; 0:0090: 10 e3   ; Calls H'10E3
 0:0091: e3                 .DATA.B  H'E3
 0:0092: 11                 .DATA.B  H'11
 0:0093: 01                 .DATA.B  H'01
