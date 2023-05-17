@@ -1,3 +1,5 @@
+  ; 0x00-0xff: Exception vector table.
+  ; See page 107 of HWM.
 0:0000: 01                 .DATA.B  H'01
 0:0001: 00                 NOP
 0:0002: ff                 .DATA.B  H'FF
@@ -67,10 +69,12 @@
 0:008e: 10 e1 10           JMP      @H'E110
   ; Actually, these aren't instructions but raw addresses.
   ; They are loaded raw (page=117, item 3) into the PC when the exception occurs.
-  ; 0:0090: 10 e3   ; Calls H'10E3
+  ; 0:0090: 10 e3   ; SCI1 ERI (Error Receive Interrupt); calls H'10E3
 0:0091: e3                 .DATA.B  H'E3
+  ; 0:0092: 11 01   ; SCI1 RI1 (Receive Interrupt); calls H'1101
 0:0092: 11                 .DATA.B  H'11
 0:0093: 01                 .DATA.B  H'01
+  ; 0:0094: 11 6c   ; Calls H'116C
 0:0094: 11                 .DATA.B  H'11
 0:0095: 6c 11              MOV.W    @H'11:8, R4
 0:0097: 71 40              MOV.B    R1, @H'40:8
@@ -1344,6 +1348,7 @@
 0:10dd: 20 fe              BRA      H'10DD
 0:10df: 20 fe              BRA      H'10DF
 0:10e1: 20 fe              BRA      H'10E1
+  ;; H'10E3: Handle SCI1 Receive *Errors*
                                                     ; SSR: page=370
 0:10e3: 15 fe cc d5        BCLR.B   #5, @H'FECC:16  ; Clear SSR Overrun Error (ORER)
 0:10e7: 15 fe cc d4        BCLR.B   #4, @H'FECC:16  ; Pop SSR Receive Framing Error (FER)
@@ -1358,6 +1363,7 @@
 0:10fb: 15 fe ca d6        BCLR.B   #6, @H'FECA:16  ; Re-enable RX interrupts.
   ; So: a byte was received on SCI1; we check for errors; if parity error, leave RX interrupts disabled.
 0:10ff: 20 66              BRA      H'1167          ;; Cleanup for this interrupt.
+  ;; H'1101: Handle SCI1 Receive
 0:1101: bf 90              MOV.W    R0, @-SP
 0:1103: bf 91              MOV.W    R1, @-SP
 0:1105: 15 fe cd 80        MOV.B    @H'FECD:16, R0
