@@ -494,7 +494,7 @@
 0:0581: 30 ff 38           BRA      H'04BC
 0:0584: 1d f7 aa dc        BCLR.W   #12, @H'F7AA:16
 0:0588: 27 06              BEQ      H'0590
-0:058a: 18 3e 76           JSR      @H'3E76
+0:058a: 18 3e 76           JSR      @H'3E76          ;; Jump to BATTSCI sending routine
 0:058d: 30 ff 2c           BRA      H'04BC
 0:0590: 1d f7 aa f9        BTST.W   #9, @H'F7AA:16
 0:0594: 27 06              BEQ      H'059C
@@ -723,6 +723,7 @@
 0:0847: 15 fe ca c6        BSET.B   #6, @H'FECA:16
 0:084b: 15 fe d2 c6        BSET.B   #6, @H'FED2:16
 0:084f: 19                 RTS
+  ; H'0850: Call H'08A6
 0:0850: 1e 00 53           BSR      H'08A6
 0:0853: 19                 RTS
 0:0854: 0e 18              BSR      H'086E
@@ -755,6 +756,7 @@
 0:089e: 01 be e8           SCB/F    FP, H'0889
 0:08a1: 15 fe 8a d3        BCLR.B   #3, @H'FE8A:16
 0:08a5: 19                 RTS
+  ; H'08A6: ... does something, then calls ADC 0-9 read
 0:08a6: 50 06              MOV.B    #H'06, R0
 0:08a8: 51 07              MOV.B    #H'07, R1
 0:08aa: 52 08              MOV.B    #H'08, R2
@@ -784,30 +786,36 @@
 0:08ef: 20 04              BRA      H'08F5
 0:08f1: 15 fb 98 08        ADD.B    #1, @H'FB98:16
 0:08f5: 19                 RTS
+  ; H'08F6: Read ADC 0-9
+  ; Reads these ADCs' values and parses them before dumping them into H'F7F0
 0:08f6: 5a fe a0           MOV.W    #H'FEA0, R2
-0:08f9: 1d f7 7e 83        MOV.W    @H'F77E:16, R3
+0:08f9: 1d f7 7e 83        MOV.W    @H'F77E:16, R3 ;; Pull some kind of bias data from H'F77E
+  ;; R3 must be between H'03CD and H'037C; if it is not,
 0:08fd: 4b 03 7c           CMP.W    #H'037C, R3
-0:0900: 25 05              BCS      H'0907
+0:0900: 25 05              BCS      H'0907         ;; if #H'037C > R3, preserve R3 by *not* branching to H'0907
 0:0902: 4b 03 cd           CMP.W    #H'03CD, R3
-0:0905: 25 03              BCS      H'090A
-0:0907: 5b 03 a3           MOV.W    #H'03A3, R3
+0:0905: 25 03              BCS      H'090A         ;; if #H'03CD < R3, preserve R3 by branching *over* H'0907.
+0:0907: 5b 03 a3           MOV.W    #H'03A3, R3    ;; Pave R3 with H'03A3.
 0:090a: 5c 03 a3           MOV.W    #H'03A3, R4
 0:090d: 5d f7 f0           MOV.W    #H'F7F0, R5
 0:0910: 5e 00 09           MOV.W    #H'0009, FP
-0:0913: ca 80              MOV.W    @R2+, R0
-0:0915: a0 10              SWAP.B   R0
-0:0917: a8 1c              ROTL.W   R0
-0:0919: a8 1c              ROTL.W   R0
-0:091b: ac a8              MULXU.W  R4, R0
-0:091d: ab b8              DIVXU.W  R3, R0
-0:091f: cd 91              MOV.W    R1, @R5+
-0:0921: 01 be ef           SCB/F    FP, H'0913
+  ; Loop {
+0:0913: ca 80              MOV.W    @R2+, R0       ;; Read ADC@R2 into R0; increment R2
+0:0915: a0 10              SWAP.B   R0             ;; AB12 -> AB21
+0:0917: a8 1c              ROTL.W   R0             ;; *=2
+0:0919: a8 1c              ROTL.W   R0             ;; *=2
+0:091b: ac a8              MULXU.W  R4, R0         ;; R0 *= R4
+0:091d: ab b8              DIVXU.W  R3, R0         ;; R0 /= R3
+0:091f: cd 91              MOV.W    R1, @R5+       ;; ... dump into @H'F7F0+R5; increment R5
+0:0921: 01 be ef           SCB/F    FP, H'0913     ;; Loop until FP exhausted - 10 times
+  ; }
 0:0924: 19                 RTS
+  ; H'0925: Read ADC A-B
 0:0925: 1d fe b4 80        MOV.W    @H'FEB4:16, R0
 0:0929: a0 10              SWAP.B   R0
 0:092b: a8 1c              ROTL.W   R0
 0:092d: a8 1c              ROTL.W   R0
-0:092f: 1d fe b6 82        MOV.W    @H'FEB6:16, R2
+0:092f: 1d fe b6 82        MOV.W    @H'FEB6:16, R2 ;; The 12th and final ADC reads data which becomes ...
 0:0933: a2 10              SWAP.B   R2
 0:0935: aa 1c              ROTL.W   R2
 0:0937: aa 1c              ROTL.W   R2
@@ -815,7 +823,7 @@
 0:093b: 15 fb 96 81        MOV.B    @H'FB96:16, R1
 0:093f: f9 09 66 83        MOV.W    @(H'0966, R1), R3
 0:0943: db 90              MOV.W    R0, @R3
-0:0945: 1d f7 7e 92        MOV.W    R2, @H'F77E:16
+0:0945: 1d f7 7e 92        MOV.W    R2, @H'F77E:16 ;; ... some kind of multiplicative modifier for the last ADC.
 0:0949: 04 04 21           ADD.B    #H'04, R1
 0:094c: 41 28              CMP.B    #H'28, R1
 0:094e: 25 02              BCS      H'0952
@@ -1360,40 +1368,62 @@
   ; I see nothing that consumes this byte.
 0:10f9: 26 6c              BNE      H'1167          ; ... and if no parity error, B 1167
                                                     ; SCR: page=366
-0:10fb: 15 fe ca d6        BCLR.B   #6, @H'FECA:16  ; Re-enable RX interrupts.
+0:10fb: 15 fe ca d6        BCLR.B   #6, @H'FECA:16  ; Disable RX interrupts.
   ; So: a byte was received on SCI1; we check for errors; if parity error, leave RX interrupts disabled.
 0:10ff: 20 66              BRA      H'1167          ;; Cleanup for this interrupt.
   ;; H'1101: Handle SCI1 Receive
 0:1101: bf 90              MOV.W    R0, @-SP        ; Move R0 onto the stack
 0:1103: bf 91              MOV.W    R1, @-SP        ; ... ditto for R1.
+  ;;c; void handle_sci1_rx_irq() {
+  ;;c;   uint16_t i;
+  ;;c;   uint16_t j;
 0:1105: 15 fe cd 80        MOV.B    @H'FECD:16, R0  ; Copy SCI1 RDR (byte received) into R0
+  ;;c;   i = *sci1_rdr;
 0:1109: 15 fe cc d6        BCLR.B   #6, @H'FECC:16  ; Clear RDRF (Receive data register full)
+  ;;c;   *sci1_ssr &= 0b10111111;        # SSR_RDRF
 0:110d: 15 fe c8 f4        BTST.B   #4, @H'FEC8:16  ; SMR: page=362 -- test the Parity mode bit
-0:1111: 26 08              BNE      H'111B          ; If not set, do nothing -- go to H'111B
+  ;; if the parity mode bit was SET, CCR.Z is set to 0 ...
+0:1111: 26 08              BNE      H'111B          ; ... and zero means that we go to H'111B. So we jump to 111B if the parity was odd.
+  ;;c;   if (*sci1_smr & 0b00010000) {   # SMR_PE bit
 0:1113: 15 fe cc d3        BCLR.B   #3, @H'FECC:16  ; Else, check for a parity error
-0:1117: 27 08              BEQ      H'1121          ;   If there was one -- go to H'1121
+  ; BCLR.B will set CCR.Z to 1 if it didn't have anything to clear.
+  ; See https://downloads.laboratoryb.org/insight/documents/H8_538F_HWM.PDF#page=611
+  ;;c;     if (*sci1_ssr & 0b00001000) { # SSR_PER bit
+  ;;c;       *sci1_smr |= 0b00010000;
+  ;;c;       *((uint8_t*) 0xfbb0 + 1) = (uint8_t) i;
+  ;;c;     }
+0:1117: 27 08              BEQ      H'1121          ;   If there was NOT a parity error, go to H'1121
 0:1119: 20 10              BRA      H'112B          ;   Else -- go to H'112B
-0:111b: 15 fe cc d3        BCLR.B   #3, @H'FECC:16  ; If not in parity mode AND there is a parity error
+0:111b: 15 fe cc d3        BCLR.B   #3, @H'FECC:16  ; If in odd parity, check for a parity error
+  ; BCLR.B will clear out the parity error bit
+  ; ... if it was unset already, it will set CCR.Z to 1.
+  ; ... and if CCR.Z is 1, we will branch to H'112B.
+  ; So, if there was no error, we can continue to 112B.
 0:111f: 27 0a              BEQ      H'112B          ; -- go to H'112B
 0:1121: 15 fe c8 c4        BSET.B   #4, @H'FEC8:16  ; Else, set odd parity (this should fix parity from H'1117?)
 0:1125: 15 fb b1 90        MOV.B    R0, @H'FBB1:16  ; Dump R0's LSByte -> H'FBB1
 0:1129: 20 2e              BRA      H'1159          ; ... and jump to H'1159
   ; {
 0:112b: 15 fe c8 d4        BCLR.B   #4, @H'FEC8:16  ; Set even parity
+  ;;c;     else {
 0:112f: 04 f0 40           OR.B     #H'F0, R0       ; XX00 -> XXF0, see page=65
 0:1132: 15 fb b0 90        MOV.B    R0, @H'FBB0:16  ; ? Pull first byte of R0 -> H'FBB0
 0:1136: 1d fb b0 80        MOV.W    @H'FBB0:16, R0  ; Combines OR'd R0 with what was in R0 last run
 0:113a: 48 f0 00           CMP.W    #H'F000, R0     ; CMP: page=602 ... if it is exactly H'F000,
   ; ; then set CCR.Z to 1 and we'll fall through H'113D, SKIPPING H'1143 -> H'1159.
   ; }
+  ; ; This'd only be the case on the first run! Perhaps why we skip.
 0:113d: 26 06              BNE      H'1145          ; ... continue the routine
 0:113f: 15 fb b2 80        MOV.B    @H'FBB2:16, R0  ; Copy "old R1" into R0
 0:1143: 20 14              BRA      H'1159          ; ... then skip the part where we read the ROM.
-0:1145: 48 f6 80           CMP.W    #H'F680, R0     ; If H'F680 > R0 then ; clear CCR.C
+0:1145: 48 f6 80           CMP.W    #H'F680, R0     ;
+  ;;c; if (i < (uint16_t) 0xf680) // Then CCR.C=1
 0:1148: 24 03              BCC      H'114D          ; -- skip the overwrite of R0
 0:114a: 58 f6 80           MOV.W    #H'F680, R0     ; (overwrite R0 with H'F680)
+  ;;c;   i = 0xf680;
 0:114d: a8 81              MOV.W    R0, R1          ; Copy R0 to R1 -- we'll use this later ...
 0:114f: a9 08              ADD.W    #1, R1          ; R1++
+  ;;c; j = i + 1;
   ; Now, read the values of R0/R1 out of memory and onto the transmit line here
 0:1151: d0 80              MOV.B    @R0, R0         ; Read the byte from the ROM address in R0, into the first byte of R0
 0:1153: d1 81              MOV.B    @R1, R1         ; Read ' ' ' ' R1
@@ -1635,7 +1665,7 @@
 0:13d0: 1d f7 be 94        MOV.W    R4, @H'F7BE:16
 0:13d4: 1d 50 d2 74        CMP.W    @H'50D2:16, R4
 0:13d8: 22 44              BHI      H'141E
-0:13da: 1d 50 d6 74        CMP.W    @H'50D6:16, R4
+0:13da: 1d 50 d6 74        CMP.W    @H'50D6:16, R4  ;; #H'7CFF
 0:13de: 25 19              BCS      H'13F9
 0:13e0: ac 80              MOV.W    R4, R0
 0:13e2: 1d 50 da 81        MOV.W    @H'50DA:16, R1
@@ -1682,16 +1712,18 @@
 0:1475: 30 01 7f           BRA      H'15F7
 0:1478: 1d f7 08 fa        BTST.W   #10, @H'F708:16
 0:147c: 36 01 78           BNE      H'15F7
-0:147f: 5e 00 09           MOV.W    #H'0009, FP
+0:147f: 5e 00 09           MOV.W    #H'0009, FP ; This loop will run 10 times
 0:1482: 5a f7 f0           MOV.W    #H'F7F0, R2
+  ; H'F7F0 is, of course, the base ADC raw output address.
 0:1485: 5b f8 84           MOV.W    #H'F884, R3
 0:1488: 5c 04 21           MOV.W    #H'0421, R4
 0:148b: ad 13              CLR.W    R5
 0:148d: ca 80              MOV.W    @R2+, R0
-0:148f: ac a8              MULXU.W  R4, R0
-0:1491: a0 81              MOV.B    R0, R1
-0:1493: a1 10              SWAP.B   R1
-0:1495: 0c 05 00 21        ADD.W    #H'0500, R1
+  ; Copy from the most recent battery ADC to R0
+0:148f: ac a8              MULXU.W  R4, R0         ;; R0 *= R4
+0:1491: a0 81              MOV.B    R0, R1         ;; R0's lower byte -> R1
+0:1493: a1 10              SWAP.B   R1             ;; R1: 0012 -> 0021
+0:1495: 0c 05 00 21        ADD.W    #H'0500, R1    ;;
 0:1499: cb 91              MOV.W    R1, @R3+
 0:149b: a9 25              ADD.W    R1, R5
 0:149d: 24 03              BCC      H'14A2
@@ -1713,7 +1745,7 @@
 0:14c9: 5c f8 84           MOV.W    #H'F884, R4
 0:14cc: 5d f8 98           MOV.W    #H'F898, R5
 0:14cf: cc 80              MOV.W    @R4+, R0
-0:14d1: 1d 50 da 81        MOV.W    @H'50DA:16, R1
+0:14d1: 1d 50 da 81        MOV.W    @H'50DA:16, R1   ;; #H'FFF0
 0:14d5: cd 82              MOV.W    @R5+, R2
 0:14d7: dd 83              MOV.W    @R5, R3
 0:14d9: 18 43 3c           JSR      @H'433C
@@ -1744,7 +1776,7 @@
 0:1528: 5c f8 84           MOV.W    #H'F884, R4
 0:152b: 5d f8 c6           MOV.W    #H'F8C6, R5
 0:152e: cc 80              MOV.W    @R4+, R0
-0:1530: 1d 50 dc 81        MOV.W    @H'50DC:16, R1
+0:1530: 1d 50 dc 81        MOV.W    @H'50DC:16, R1   ;; #H'FFF0
 0:1534: cd 82              MOV.W    @R5+, R2
 0:1536: dd 83              MOV.W    @R5, R3
 0:1538: 18 43 3c           JSR      @H'433C
@@ -1770,7 +1802,7 @@
 0:1577: 5c f8 84           MOV.W    #H'F884, R4
 0:157a: 5d f8 f4           MOV.W    #H'F8F4, R5
 0:157d: cc 80              MOV.W    @R4+, R0
-0:157f: 1d 50 de 81        MOV.W    @H'50DE:16, R1
+0:157f: 1d 50 de 81        MOV.W    @H'50DE:16, R1   ;; #H'F0D2
 0:1583: cd 82              MOV.W    @R5+, R2
 0:1585: dd 83              MOV.W    @R5, R3
 0:1587: 18 43 3c           JSR      @H'433C
@@ -4988,11 +5020,14 @@
 0:3e6d: 1d 56 3e 80        MOV.W    @H'563E:16, R0
 0:3e71: 1d f6 bc 90        MOV.W    R0, @H'F6BC:16
 0:3e75: 19                 RTS
+  ; BATTSCI Send routine
+  ; Compare e.g. https://git.laboratoryb.org/hurricos/Honda_Insight_LiBCM/src/branch/main/Firmware/MVP/battsci.cpp
+  ; This composes a list of bytes to send as a frame.
 0:3e76: 15 f7 27 80        MOV.B    @H'F727:16, R0
 0:3e7a: 3a 02 00           BPL      H'407D
 0:3e7d: 1d f7 aa ed        BNOT.W   #13, @H'F7AA:16
 0:3e81: 36 00 c4           BNE      H'3F48
-0:3e84: 15 f7 10 06 87     MOV.B    #H'87, @H'F710:16
+0:3e84: 15 f7 10 06 87     MOV.B    #H'87, @H'F710:16   ; The all-holy 87!
 0:3e89: a8 13              CLR.W    R0
 0:3e8b: 15 f7 af 80        MOV.B    @H'F7AF:16, R0
 0:3e8f: 15 f7 12 90        MOV.B    R0, @H'F712:16
@@ -5061,11 +5096,11 @@
 0:3f3e: 04 7f 50           AND.B    #H'7F, R0
 0:3f41: 15 f7 1a 90        MOV.B    R0, @H'F71A:16
 0:3f45: 30 01 02           BRA      H'404A
-0:3f48: 15 f7 10 06 aa     MOV.B    #H'AA, @H'F710:16
-0:3f4d: 1d f7 00 80        MOV.W    @H'F700:16, R0
+0:3f48: 15 f7 10 06 aa     MOV.B    #H'AA, @H'F710:16  ;;; Write out B0 of BATTSCI 0xAA frame ; The all-holy AA!
+0:3f4d: 1d f7 00 80        MOV.W    @H'F700:16, R0     ; ... where the p-codes come from.
 0:3f51: a8 1a              SHLL.W   R0
 0:3f53: a0 1b              SHLR.B   R0
-0:3f55: 15 f7 12 90        MOV.B    R0, @H'F712:16
+0:3f55: 15 f7 12 90        MOV.B    R0, @H'F712:16     ;;; Write out B2 of BATTSCI 0xAA frame ; P-codes :(
 0:3f59: a0 10              SWAP.B   R0
 0:3f5b: 1d f7 00 fd        BTST.W   #13, @H'F700:16
 0:3f5f: 27 02              BEQ      H'3F63
@@ -5077,24 +5112,24 @@
 0:3f6f: 15 fb 8a 21        ADD.B    @H'FB8A:16, R1
 0:3f73: a1 16              TST.B    R1
 0:3f75: 27 02              BEQ      H'3F79
-0:3f77: a0 c4              BSET.B   #4, R0
+0:3f77: a0 c4              BSET.B   #4, R0             ;; Set 0x10 if METSCI received
 0:3f79: 1d f7 00 fa        BTST.W   #10, @H'F700:16
 0:3f7d: 27 02              BEQ      H'3F81
-0:3f7f: a0 c3              BSET.B   #3, R0
-0:3f81: 15 f7 11 90        MOV.B    R0, @H'F711:16
-0:3f85: 1d f7 02 80        MOV.W    @H'F702:16, R0
-0:3f89: 04 0f 50           AND.B    #H'0F, R0
-0:3f8c: 15 f7 94 f4        BTST.B   #4, @H'F794:16
-0:3f90: 27 02              BEQ      H'3F94
-0:3f92: a0 c6              BSET.B   #6, R0
-0:3f94: 15 f7 94 f3        BTST.B   #3, @H'F794:16
-0:3f98: 27 02              BEQ      H'3F9C
-0:3f9a: a0 c5              BSET.B   #5, R0
-0:3f9c: 15 f7 14 90        MOV.B    R0, @H'F714:16
+0:3f7f: a0 c3              BSET.B   #3, R0             ;; 0x10 -> 0x18 (??)
+0:3f81: 15 f7 11 90        MOV.B    R0, @H'F711:16     ;;; Write out B1 of BATTSCI 0xAA frame
+0:3f85: 1d f7 02 80        MOV.W    @H'F702:16, R0     ;; Pull third byte from @H'F702
+0:3f89: 04 0f 50           AND.B    #H'0F, R0          ;; Mask lower nibble of byte
+0:3f8c: 15 f7 94 f4        BTST.B   #4, @H'F794:16     ;; If byte 4 of @H'F794 is unset
+0:3f90: 27 02              BEQ      H'3F94             ;; -- we will fall through and
+0:3f92: a0 c6              BSET.B   #6, R0             ;; -- set bit 5 of B4
+0:3f94: 15 f7 94 f3        BTST.B   #3, @H'F794:16     ;; If byte 3 of @H'F794 is unset
+0:3f98: 27 02              BEQ      H'3F9C             ;; -- we will fall through and
+0:3f9a: a0 c5              BSET.B   #5, R0             ;; -- set bit 5 of B4
+0:3f9c: 15 f7 14 90        MOV.B    R0, @H'F714:16     ;;; Write out B4 of BATTSCI 0xAA frame
 0:3fa0: a0 13              CLR.B    R0
-0:3fa2: 1d f7 04 f9        BTST.W   #9, @H'F704:16
-0:3fa6: 27 02              BEQ      H'3FAA
-0:3fa8: a0 c5              BSET.B   #5, R0
+0:3fa2: 1d f7 04 f9        BTST.W   #9, @H'F704:16     ;; If byte 9 of @H'F704 is unset
+0:3fa6: 27 02              BEQ      H'3FAA             ;; -- we will fall through and
+0:3fa8: a0 c5              BSET.B   #5, R0             ;; -- set bit 5 of 0xAA BATTSCI B4
 0:3faa: 1d f7 02 fa        BTST.W   #10, @H'F702:16
 0:3fae: 27 02              BEQ      H'3FB2
 0:3fb0: a0 c3              BSET.B   #3, R0
@@ -5137,8 +5172,8 @@
 0:4015: 04 06 61           XOR.B    #H'06, R1
 0:4018: a1 1b              SHLR.B   R1
 0:401a: a1 40              OR.B     R1, R0
-0:401c: 15 f7 16 90        MOV.B    R0, @H'F716:16
-0:4020: 15 f7 17 06 66     MOV.B    #H'66, @H'F717:16
+0:401c: 15 f7 16 90        MOV.B    R0, @H'F716:16      ;; B6
+0:4020: 15 f7 17 06 66     MOV.B    #H'66, @H'F717:16   ;; B7 of the 0xAA frame: firmware revision
 0:4025: 1d f7 b0 80        MOV.W    @H'F7B0:16, R0
 0:4029: 1d fb ae 30        SUB.W    @H'FBAE:16, R0
 0:402d: 2a 02              BPL      H'4031
@@ -5159,13 +5194,15 @@
 0:4057: a0 14              NEG.B    R0
 0:4059: 04 7f 50           AND.B    #H'7F, R0
 0:405c: 15 f7 1b 90        MOV.B    R0, @H'F71B:16
-0:4060: 15 fe d4 f7        BTST.B   #7, @H'FED4:16
-0:4064: 27 4f              BEQ      H'40B5
-0:4066: 15 f7 1c 13        CLR.B    @H'F71C:16
-0:406a: 15 f7 10 80        MOV.B    @H'F710:16, R0
+  ; { unlike the SCI1 loop, we bail entirely if the transmit register is full.
+0:4060: 15 fe d4 f7        BTST.B   #7, @H'FED4:16     ;; TRDE? (is the transmit data register empty?)
+0:4064: 27 4f              BEQ      H'40B5             ;; No? Bail.
+0:4066: 15 f7 1c 13        CLR.B    @H'F71C:16         ;; Clear out @H'F71C ... some kind of sender mutex, maybe.
+0:406a: 15 f7 10 80        MOV.B    @H'F710:16, R0     ;; @H'F710
 0:406e: 15 fe d3 90        MOV.B    R0, @H'FED3:16
-0:4072: 15 fe d4 d7        BCLR.B   #7, @H'FED4:16
-0:4076: 15 fe d2 c7        BSET.B   #7, @H'FED2:16
+  ; }
+0:4072: 15 fe d4 d7        BCLR.B   #7, @H'FED4:16     ;; Clear BATTSCI TDRE
+0:4076: 15 fe d2 c7        BSET.B   #7, @H'FED2:16     ;; Fill BATTSCI (SCI2) TDR
 0:407a: 30 00 38           BRA      H'40B5
 0:407d: a0 85              MOV.B    R0, R5
 0:407f: 15 f7 27 06 80     MOV.B    #H'80, @H'F727:16
@@ -5191,6 +5228,7 @@
 0:40af: b3 06 cb           MOV.B    #H'CB, @-R3
 0:40b2: 30 ff 95           BRA      H'404A
 0:40b5: 19                 RTS
+  ;
 0:40b6: bf 90              MOV.W    R0, @-SP
 0:40b8: 15 f7 1c 80        MOV.B    @H'F71C:16, R0
 0:40bc: 15 f7 1c 04 0a     CMP.B    #H'0A, @H'F71C:16
@@ -5459,17 +5497,28 @@
 0:4337: aa 34              SUB.W    R2, R4
 0:4339: ac 80              MOV.W    R4, R0
 0:433b: 19                 RTS
+  ; @H'433C: (uint16_t r0, uint16_t r1, uint16_t r2)
+  ;;c; void fn_433c(uint16_t r0, uint16_t r1, uint16_t r2) {
+  ;;c;   // r1 is some type of scalar factor
 0:433c: bf 94              MOV.W    R4, @-SP
 0:433e: bf 95              MOV.W    R5, @-SP
+  ;;c;   uint16_t r5;
 0:4340: ab 84              MOV.W    R3, R4
 0:4342: a9 ac              MULXU.W  R1, R4
 0:4344: a9 aa              MULXU.W  R1, R2
+  ;;c;   r2 *= r1;
 0:4346: ac 23              ADD.W    R4, R3
+  ;;c;   r3 += r3 * r1;
 0:4348: 0c 00 00 a2        ADDX.W   #H'0000, R2
+  ;;c;   // Clear the CCR.C bit
 0:434c: a9 14              NEG.W    R1
+  ;;c;   r1 = 0 - r1;
 0:434e: a9 a8              MULXU.W  R1, R0
+  ;;c;   r0 *= r1;
 0:4350: a9 23              ADD.W    R1, R3
+  ;;c;   r3 += r1;
 0:4352: a8 a2              ADDX.W   R0, R2
+  ;;c;   if ((r2 += r0) < r2) { // Kind of; r2 and r0 here are both uint16_t's, this works because 
 0:4354: 24 06              BCC      H'435C
 0:4356: aa 13              CLR.W    R2
 0:4358: aa 15              NOT.W    R2
@@ -5477,6 +5526,7 @@
 0:435c: cf 85              MOV.W    @SP+, R5
 0:435e: cf 84              MOV.W    @SP+, R4
 0:4360: 19                 RTS
+  ;;c;
 0:4361: 0c 00 90 32        SUB.W    #H'0090, R2
 0:4365: 25 08              BCS      H'436F
 0:4367: aa 1a              SHLL.W   R2
