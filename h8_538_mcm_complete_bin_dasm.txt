@@ -2538,7 +2538,7 @@
 0:1aa2: a1 22              ADD.B    R1, R2
 0:1aa4: 15 f9 63 92        MOV.B    R2, @H'F963:16
 0:1aa8: 19                 RTS
-0:1aa9: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
+0:1aa9: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
 0:1aad: 0c 19 00 a8        MULXU.W  #H'1900, R0
 0:1ab1: 0c 03 e8 b8        DIVXU.W  #H'03E8, R0
 0:1ab5: 0c 03 20 21        ADD.W    #H'0320, R1
@@ -5410,7 +5410,7 @@
 0:3ee8: 26 06              BNE      H'3EF0
 0:3eea: 15 fb 1e f6        BTST.B   #6, @H'FB1E:16
 0:3eee: 27 0c              BEQ      H'3EFC
-0:3ef0: 15 fb 1b f6        BTST.B   #6, @H'FB1B:16
+0:3ef0: 15 fb 1b f6        BTST.B   #6, @BATSCI_B1_Pcode:16
 0:3ef4: 26 06              BNE      H'3EFC
 0:3ef6: 15 fa 07 c0        BSET.B   #0, @H'FA07:16
 0:3efa: 20 04              BRA      H'3F00
@@ -6941,7 +6941,7 @@
 0:5116: 15 95 e8 80        MOV.B    @H'95E8:16, R0
 0:511a: 15 fa 2a 90        MOV.B    R0, @H'FA2A:16
 0:511e: 19                 RTS
-0:511f: 1d f6 8c 84        MOV.W    @H'F68C:16, R4
+0:511f: 1d f6 8c 84        MOV.W    @BATSCI_SoC:16, R4
 0:5123: 5d 96 0c           MOV.W    #H'960C, R5
 0:5126: 5e 96 14           MOV.W    #H'9614, FP
 0:5129: 18 14 10           JSR      @H'1410
@@ -7090,7 +7090,7 @@
 0:52dd: 15 95 e9 80        MOV.B    @H'95E9:16, R0
 0:52e1: 15 fa 30 90        MOV.B    R0, @H'FA30:16
 0:52e5: 19                 RTS
-0:52e6: 1d f6 8c 84        MOV.W    @H'F68C:16, R4
+0:52e6: 1d f6 8c 84        MOV.W    @BATSCI_SoC:16, R4
 0:52ea: 5d 96 1c           MOV.W    #H'961C, R5
 0:52ed: 5e 96 24           MOV.W    #H'9624, FP
 0:52f0: 18 14 10           JSR      @H'1410
@@ -7692,7 +7692,7 @@
 0:5a02: a9 13              CLR.W    R1
 0:5a04: 15 fa 16 04 05     CMP.B    #H'05, @H'FA16:16
 0:5a09: 26 16              BNE      H'5A21
-0:5a0b: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
+0:5a0b: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
 0:5a0f: 1d 96 d2 70        CMP.W    @H'96D2:16, R0
 0:5a13: 24 30              BCC      H'5A45
 0:5a15: 15 f9 be 80        MOV.B    @H'F9BE:16, R0
@@ -8287,7 +8287,7 @@
 0:60a4: 1d f9 a2 13        CLR.W    @H'F9A2:16
 0:60a8: 19                 RTS
 0:60a9: 15 fa 16 81        MOV.B    @H'FA16:16, R1
-0:60ad: 1d f6 8c 82        MOV.W    @H'F68C:16, R2
+0:60ad: 1d f6 8c 82        MOV.W    @BATSCI_SoC:16, R2
 0:60b1: 1d 99 18 72        CMP.W    @H'9918:16, R2
 0:60b5: 24 16              BCC      H'60CD
 0:60b7: 1d 99 16 80        MOV.W    @H'9916:16, R0
@@ -8656,7 +8656,7 @@
 0:6518: 20 04              BRA      H'651E
 0:651a: 1d fa 20 c6        BSET.W   #6, @H'FA20:16
 0:651e: 19                 RTS
-0:651f: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
+0:651f: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
 0:6523: 1d fa 20 f3        BTST.W   #3, @H'FA20:16
 0:6527: 26 32              BNE      H'655B
 0:6529: 1d 94 92 70        CMP.W    @H'9492:16, R0
@@ -8680,7 +8680,7 @@
 0:6563: 22 04              BHI      H'6569
 0:6565: 1d fa 1e ca        BSET.W   #10, @H'FA1E:16
 0:6569: 19                 RTS
-0:656a: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
+0:656a: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
 0:656e: 15 fb 1f f5        BTST.B   #5, @H'FB1F:16
 0:6572: 26 22              BNE      H'6596
 0:6574: 15 fb 1f f4        BTST.B   #4, @H'FB1F:16
@@ -8703,6 +8703,8 @@
 0:65a9: f0 eb 80 81        MOV.B    @(H'EB80, R0), R1
 0:65ad: 15 fa 14 91        MOV.B    R1, @H'FA14:16
 0:65b1: 19                 RTS
+
+
 0:65b2: 18 66 21           JSR      @H'6621
 0:65b5: 18 66 61           JSR      @H'6661
 0:65b8: 15 fa 13 75        CMP.B    @H'FA13:16, R5
@@ -8747,6 +8749,8 @@
 0:6618: 15 fa 13 85        MOV.B    @H'FA13:16, R5
 0:661c: 15 fa 16 95        MOV.B    R5, @H'FA16:16
 0:6620: 19                 RTS
+
+
 0:6621: a8 13              CLR.W    R0
 0:6623: a9 13              CLR.W    R1
 0:6625: 15 fa 03 f7        BTST.B   #7, @H'FA03:16
@@ -8840,6 +8844,7 @@
 0:6723: 1d fa 1a 13        CLR.W    @H'FA1A:16
 0:6727: 15 f9 ff d4        BCLR.B   #4, @H'F9FF:16
 0:672b: 19                 RTS
+
 0:672c: 15 fa 13 81        MOV.B    @H'FA13:16, R1
 0:6730: 41 21              CMP.B    #H'21, R1
 0:6732: 27 08              BEQ      H'673C
@@ -8991,6 +8996,8 @@
 0:68a9: 20 04              BRA      H'68AF
 0:68ab: 15 fa f9 13        CLR.B    @H'FAF9:16
 0:68af: 19                 RTS
+
+
 0:68b0: 15 fa 16 04 0c     CMP.B    #H'0C, @H'FA16:16
 0:68b5: 27 0a              BEQ      H'68C1
 0:68b7: 15 fb 23 d0        BCLR.B   #0, @H'FB23:16
@@ -9167,7 +9174,7 @@
 0:6ab8: 26 1c              BNE      H'6AD6
 0:6aba: 1d fa 1e fb        BTST.W   #11, @H'FA1E:16
 0:6abe: 26 16              BNE      H'6AD6
-0:6ac0: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
+0:6ac0: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
 0:6ac4: 1d 97 b2 70        CMP.W    @H'97B2:16, R0
 0:6ac8: 25 0c              BCS      H'6AD6
 0:6aca: 15 fa 67 c3        BSET.B   #3, @H'FA67:16
@@ -9235,6 +9242,9 @@
 0:6b8a: 20 04              BRA      H'6B90
 0:6b8c: 15 f9 f6 c3        BSET.B   #3, @H'F9F6:16
 0:6b90: 19                 RTS
+
+
+
 0:6b91: 1d fa 1e f8        BTST.W   #8, @H'FA1E:16
 0:6b95: 26 13              BNE      H'6BAA
 0:6b97: 15 fa 07 d3        BCLR.B   #3, @H'FA07:16
@@ -9301,6 +9311,8 @@
 0:6c5c: 15 f9 f6 c6        BSET.B   #6, @H'F9F6:16
 0:6c60: 15 f9 f6 d5        BCLR.B   #5, @H'F9F6:16
 0:6c64: 19                 RTS
+
+
 0:6c65: a8 13              CLR.W    R0
 0:6c67: 5c 00 04           MOV.W    #H'0004, R4
 0:6c6a: 5e f7 00           MOV.W    #H'F700, FP
@@ -9406,8 +9418,8 @@
 0:6d5d: 20 04              BRA      H'6D63
 0:6d5f: 15 fa 5c c4        BSET.B   #4, @H'FA5C:16
 0:6d63: 19                 RTS
-0:6d64: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
-0:6d68: 1d 97 b4 70        CMP.W    @H'97B4:16, R0
+0:6d64: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
+0:6d68: 1d 97 b4 70        CMP.W    @Table_90percent_SoC:16, R0
 0:6d6c: 25 06              BCS      H'6D74
 0:6d6e: 15 fa 5c c3        BSET.B   #3, @H'FA5C:16
 0:6d72: 20 0a              BRA      H'6D7E
@@ -9517,20 +9529,20 @@
 0:6ebf: 15 fb 24 04 aa     CMP.B    #H'AA, @H'FB24:16
 0:6ec4: 36 01 2e           BNE      H'6FF5
 0:6ec7: 58 fb 25           MOV.W    #H'FB25, R0
-0:6eca: c0 81              MOV.B    @R0+, R1
-0:6ecc: 15 fb 1b 91        MOV.B    R1, @H'FB1B:16
-0:6ed0: c0 81              MOV.B    @R0+, R1
-0:6ed2: 15 fb 1c 91        MOV.B    R1, @H'FB1C:16
-0:6ed6: c0 81              MOV.B    @R0+, R1
-0:6ed8: 15 fb 1d 91        MOV.B    R1, @H'FB1D:16
-0:6edc: c0 81              MOV.B    @R0+, R1
-0:6ede: 15 fb 1e 91        MOV.B    R1, @H'FB1E:16
-0:6ee2: 04 0f 51           AND.B    #H'0F, R1
-0:6ee5: 15 fc 4f 91        MOV.B    R1, @H'FC4F:16
-0:6ee9: c0 81              MOV.B    @R0+, R1
-0:6eeb: 15 fb 1f 91        MOV.B    R1, @H'FB1F:16
-0:6eef: c0 81              MOV.B    @R0+, R1
-0:6ef1: 15 fb 22 91        MOV.B    R1, @H'FB22:16
+0:6eca: c0 81              MOV.B    @R0+, R1       # B1 0x10
+0:6ecc: 15 fb 1b 91        MOV.B    R1, @BATSCI_B1_Pcode:16 
+0:6ed0: c0 81              MOV.B    @R0+, R1       # B2 Pcode
+0:6ed2: 15 fb 1c 91        MOV.B    R1, @BATSCI_B2_Pcode:16 
+0:6ed6: c0 81              MOV.B    @R0+, R1       # B3 Pcode
+0:6ed8: 15 fb 1d 91        MOV.B    R1, @BATSCI_B3_Pcode:16 
+0:6edc: c0 81              MOV.B    @R0+, R1       # B4 Pcode
+0:6ede: 15 fb 1e 91        MOV.B    R1, @H'FB1E:16 
+0:6ee2: 04 0f 51           AND.B    #H'0F, R1      # Mask it
+0:6ee5: 15 fc 4f 91        MOV.B    R1, @H'FC4F:16 # copy masked
+0:6ee9: c0 81              MOV.B    @R0+, R1       # B5 Disable ASST/CHRG flags
+0:6eeb: 15 fb 1f 91        MOV.B    R1, @H'FB1F:16 
+0:6eef: c0 81              MOV.B    @R0+, R1       # B6 Request regen/noRegen if battery low/high
+0:6ef1: 15 fb 22 91        MOV.B    R1, @BATSCI_chargeRequest:16
 0:6ef5: c0 81              MOV.B    @R0+, R1
 0:6ef7: 15 f7 b4 91        MOV.B    R1, @H'F7B4:16
 0:6efb: a9 13              CLR.W    R1
@@ -9548,7 +9560,7 @@
 0:6f1b: 20 04              BRA      H'6F21
 0:6f1d: 15 f7 11 d7        BCLR.B   #7, @H'F711:16
 0:6f21: a0 13              CLR.B    R0
-0:6f23: 15 fb 1b f6        BTST.B   #6, @H'FB1B:16
+0:6f23: 15 fb 1b f6        BTST.B   #6, @BATSCI_B1_Pcode:16
 0:6f27: 27 0e              BEQ      H'6F37
 0:6f29: a0 c1              BSET.B   #1, R0
 0:6f2b: 15 93 5c f1        BTST.B   #1, @H'935C:16
@@ -9556,13 +9568,13 @@
 0:6f31: 15 fa 66 d1        BCLR.B   #1, @H'FA66:16
 0:6f35: 20 04              BRA      H'6F3B
 0:6f37: 15 fa 66 c1        BSET.B   #1, @H'FA66:16
-0:6f3b: 15 fb 1b f3        BTST.B   #3, @H'FB1B:16
+0:6f3b: 15 fb 1b f3        BTST.B   #3, @BATSCI_B1_Pcode:16
 0:6f3f: 27 02              BEQ      H'6F43
 0:6f41: a0 c2              BSET.B   #2, R0
-0:6f43: 15 fb 1d f3        BTST.B   #3, @H'FB1D:16
+0:6f43: 15 fb 1d f3        BTST.B   #3, @BATSCI_B3_Pcode:16
 0:6f47: 27 02              BEQ      H'6F4B
 0:6f49: a0 c3              BSET.B   #3, R0
-0:6f4b: 15 fb 1b f5        BTST.B   #5, @H'FB1B:16
+0:6f4b: 15 fb 1b f5        BTST.B   #5, @BATSCI_B1_Pcode:16
 0:6f4f: 27 02              BEQ      H'6F53
 0:6f51: a0 c6              BSET.B   #6, R0
 0:6f53: 15 fb 1f f6        BTST.B   #6, @H'FB1F:16
@@ -9582,10 +9594,10 @@
 0:6f7a: 15 fb 1f f3        BTST.B   #3, @H'FB1F:16
 0:6f7e: 27 02              BEQ      H'6F82
 0:6f80: a0 c2              BSET.B   #2, R0
-0:6f82: 15 fb 1d f5        BTST.B   #5, @H'FB1D:16
+0:6f82: 15 fb 1d f5        BTST.B   #5, @BATSCI_B3_Pcode:16
 0:6f86: 27 02              BEQ      H'6F8A
 0:6f88: a0 c7              BSET.B   #7, R0
-0:6f8a: 15 fb 1b f4        BTST.B   #4, @H'FB1B:16
+0:6f8a: 15 fb 1b f4        BTST.B   #4, @BATSCI_B1_Pcode:16
 0:6f8e: 26 02              BNE      H'6F92
 0:6f90: a0 c3              BSET.B   #3, R0
 0:6f92: 15 f7 13 81        MOV.B    @H'F713:16, R1
@@ -9600,14 +9612,14 @@
 0:6fac: 04 7f 52           AND.B    #H'7F, R2
 0:6faf: 15 fb 3b 92        MOV.B    R2, @H'FB3B:16
 0:6fb3: c0 81              MOV.B    @R0+, R1
-0:6fb5: 15 fb 21 91        MOV.B    R1, @H'FB21:16
-0:6fb9: c0 82              MOV.B    @R0+, R2
-0:6fbb: a2 12              EXTU.B   R2
-0:6fbd: 0c 00 07 51        AND.W    #H'0007, R1
-0:6fc1: a1 10              SWAP.B   R1
-0:6fc3: a9 1b              SHLR.W   R1
-0:6fc5: aa 41              OR.W     R2, R1
-0:6fc7: 1d f6 8c 91        MOV.W    R1, @H'F68C:16
+0:6fb5: 15 fb 21 91        MOV.B    R1, @H'FB21:16 # place high byte of soc
+0:6fb9: c0 82              MOV.B    @R0+, R2 # low byte of soc
+0:6fbb: a2 12              EXTU.B   R2 # 0 -> R0[15:8]
+0:6fbd: 0c 00 07 51        AND.W    #H'0007, R1 # mask 0b00000111 on high byte 
+0:6fc1: a1 10              SWAP.B   R1 # swap up, so 0x07 -> 0x70
+0:6fc3: a9 1b              SHLR.W   R1 # shift right, so 0x70 -> 0x38
+0:6fc5: aa 41              OR.W     R2, R1 # combine the two directly. What the fuck?
+0:6fc7: 1d f6 8c 91        MOV.W    R1, @BATSCI_SoC:16
 0:6fcb: c0 81              MOV.B    @R0+, R1
 0:6fcd: a1 12              EXTU.B   R1
 0:6fcf: a1 10              SWAP.B   R1
@@ -9870,6 +9882,8 @@
 0:72f9: cf 80              MOV.W    @SP+, R0
 0:72fb: 0a                 RTE
 0:72fc: ff ff ff ff        BTST.W   #15, @(H'FFFF, SP)
+
+# R0
 0:7300: 15 f7 08 f1        BTST.B   #1, @H'F708:16
 0:7304: 36 00 84           BNE      H'738B
 0:7307: 15 f7 02 f7        BTST.B   #7, @H'F702:16
@@ -9883,19 +9897,19 @@
 0:731e: 23 05              BLS      H'7325
 0:7320: a0 08              ADD.B    #1, R0
 0:7322: 01 bb f7           SCB/F    R3, H'731C
-0:7325: 40 14              CMP.B    #H'14, R0
-0:7327: 23 02              BLS      H'732B
-0:7329: 50 14              MOV.B    #H'14, R0
-0:732b: 15 fa f6 90        MOV.B    R0, @H'FAF6:16
-0:732f: 15 f6 90 70        CMP.B    @H'F690:16, R0
+0:7325: 40 14              CMP.B    #H'14, R0 # Compare R0 with H'14, the immediate
+0:7327: 23 02              BLS      H'732B # if it's less than or the same as it ...
+0:7329: 50 14              MOV.B    #H'14, R0          # Copy H'14 into R0.
+0:732b: 15 fa f6 90        MOV.B    R0, @H'FAF6:16     # Copy R0 into FAF6.
+0:732f: 15 f6 90 70        CMP.B    @METSCI_SoC:16, R0 # Compare R0 with METSCI SoC. If it is equal, skip changing METSCI_SoC
 0:7333: 27 5a              BEQ      H'738F
 0:7335: 15 fa fd 81        MOV.B    @H'FAFD:16, R1
 0:7339: 15 93 a8 71        CMP.B    @H'93A8:16, R1
 0:733d: 25 54              BCS      H'7393
 0:733f: a1 13              CLR.B    R1
-0:7341: 15 f6 90 70        CMP.B    @H'F690:16, R0
+0:7341: 15 f6 90 70        CMP.B    @METSCI_SoC:16, R0 # Compare R0 with METSCI SoC. If it is higher, go to the +1 section
 0:7345: 22 20              BHI      H'7367
-0:7347: 15 fa f8 16        TST.B    @H'FAF8:16
+0:7347: 15 fa f8 16        TST.B    @H'FAF8:16 # otherwise fallthrough to the -1 section.
 0:734b: 26 18              BNE      H'7365
 0:734d: 15 fa 16 82        MOV.B    @H'FA16:16, R2
 0:7351: 42 20              CMP.B    #H'20, R2
@@ -9906,7 +9920,7 @@
 0:735b: 27 08              BEQ      H'7365
 0:735d: 42 26              CMP.B    #H'26, R2
 0:735f: 27 04              BEQ      H'7365
-0:7361: 15 f6 90 0c        ADD.B    #-1, @H'F690:16
+0:7361: 15 f6 90 0c        ADD.B    #-1, @METSCI_SoC:16
 0:7365: 20 2e              BRA      H'7395
 0:7367: 15 fa f7 16        TST.B    @H'FAF7:16
 0:736b: 26 1c              BNE      H'7389
@@ -9921,14 +9935,16 @@
 0:737f: 27 08              BEQ      H'7389
 0:7381: 42 26              CMP.B    #H'26, R2
 0:7383: 27 04              BEQ      H'7389
-0:7385: 15 f6 90 08        ADD.B    #1, @H'F690:16
+0:7385: 15 f6 90 08        ADD.B    #1, @METSCI_SoC:16
 0:7389: 20 0a              BRA      H'7395
-0:738b: 15 f6 90 13        CLR.B    @H'F690:16
+0:738b: 15 f6 90 13        CLR.B    @METSCI_SoC:16
 0:738f: a1 13              CLR.B    R1
 0:7391: 20 02              BRA      H'7395
 0:7393: a1 08              ADD.B    #1, R1
 0:7395: 15 fa fd 91        MOV.B    R1, @H'FAFD:16
 0:7399: 19                 RTS
+
+
 0:739a: 18 73 f0           JSR      @H'73F0
 0:739d: 15 f6 d5 f7        BTST.B   #7, @H'F6D5:16
 0:73a1: 27 4c              BEQ      H'73EF
@@ -9956,30 +9972,32 @@
 0:73e9: a8 84              MOV.W    R0, R4
 0:73eb: 1d f6 d6 94        MOV.W    R4, @H'F6D6:16
 0:73ef: 19                 RTS
-0:73f0: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
-0:73f4: 15 fb 22 81        MOV.B    @H'FB22:16, R1
-0:73f8: 1d f6 8c 82        MOV.W    @H'F68C:16, R2
+
+
+0:73f0: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
+0:73f4: 15 fb 22 81        MOV.B    @BATSCI_chargeRequest:16, R1
+0:73f8: 1d f6 8c 82        MOV.W    @BATSCI_SoC:16, R2
 0:73fc: a8 72              CMP.W    R0, R2
 0:73fe: 26 50              BNE      H'7450
 0:7400: a1 f6              BTST.B   #6, R1
 0:7402: 27 14              BEQ      H'7418
-0:7404: 1d 99 62 72        CMP.W    @H'9962:16, R2
+0:7404: 1d 99 62 72        CMP.W    @TABLE_72percent_SoC:16, R2
 0:7408: 23 06              BLS      H'7410
 0:740a: 15 f6 d5 c5        BSET.B   #5, @H'F6D5:16
 0:740e: 20 12              BRA      H'7422
-0:7410: 15 fb 1d f0        BTST.B   #0, @H'FB1D:16
+0:7410: 15 fb 1d f0        BTST.B   #0, @BATSCI_B3_Pcode:16
 0:7414: 27 3a              BEQ      H'7450
 0:7416: 20 06              BRA      H'741E
-0:7418: 1d 99 62 72        CMP.W    @H'9962:16, R2
+0:7418: 1d 99 62 72        CMP.W    @TABLE_72percent_SoC:16, R2
 0:741c: 22 32              BHI      H'7450
 0:741e: 15 f6 d5 d5        BCLR.B   #5, @H'F6D5:16
 0:7422: a1 f5              BTST.B   #5, R1
 0:7424: 27 0c              BEQ      H'7432
-0:7426: 1d 99 64 72        CMP.W    @H'9964:16, R2
+0:7426: 1d 99 64 72        CMP.W    @TABLE_28percent_SoC:16, R2
 0:742a: 24 0c              BCC      H'7438
 0:742c: 15 f6 d5 c6        BSET.B   #6, @H'F6D5:16
 0:7430: 20 14              BRA      H'7446
-0:7432: 1d 99 64 72        CMP.W    @H'9964:16, R2
+0:7432: 1d 99 64 72        CMP.W    @TABLE_28percent_SoC:16, R2
 0:7436: 24 0a              BCC      H'7442
 0:7438: 15 f9 be 80        MOV.B    @H'F9BE:16, R0
 0:743c: 15 99 5b 70        CMP.B    @H'995B:16, R0
@@ -9992,6 +10010,8 @@
 0:7454: 15 f6 d5 d5        BCLR.B   #5, @H'F6D5:16
 0:7458: 15 f6 d5 d6        BCLR.B   #6, @H'F6D5:16
 0:745c: 19                 RTS
+
+
 0:745d: 15 fc 8e 80        MOV.B    @H'FC8E:16, R0
 0:7461: 15 99 5a 70        CMP.B    @H'995A:16, R0
 0:7465: 35 00 a3           BCS      H'750B
@@ -10331,7 +10351,7 @@
 0:784a: 15 fa 0b c4        BSET.B   #4, @H'FA0B:16
 0:784e: 19                 RTS
 0:784f: 15 fb 10 06 99     MOV.B    #H'99, @H'FB10:16
-0:7854: 1d f6 8c 80        MOV.W    @H'F68C:16, R0
+0:7854: 1d f6 8c 80        MOV.W    @BATSCI_SoC:16, R0
 0:7858: a8 81              MOV.W    R0, R1
 0:785a: a8 1a              SHLL.W   R0
 0:785c: a0 10              SWAP.B   R0
@@ -10370,7 +10390,7 @@
 0:78b0: 15 fb 12 91        MOV.B    R1, @H'FB12:16
 0:78b4: 19                 RTS
 0:78b5: 15 fb 10 06 e1     MOV.B    #H'E1, @H'FB10:16
-0:78ba: 15 f6 90 80        MOV.B    @H'F690:16, R0
+0:78ba: 15 f6 90 80        MOV.B    @METSCI_SoC:16, R0
 0:78be: a0 c5              BSET.B   #5, R0
 0:78c0: 15 fb 11 90        MOV.B    R0, @H'FB11:16
 0:78c4: a0 12              EXTU.B   R0
@@ -10466,7 +10486,7 @@
 0:79b4: a1 40              OR.B     R1, R0
 0:79b6: 15 fa 0e 90        MOV.B    R0, @H'FA0E:16
 0:79ba: a8 13              CLR.W    R0
-0:79bc: 1d f6 8c 81        MOV.W    @H'F68C:16, R1
+0:79bc: 1d f6 8c 81        MOV.W    @BATSCI_SoC:16, R1
 0:79c0: a1 10              SWAP.B   R1
 0:79c2: a1 80              MOV.B    R1, R0
 0:79c4: a1 13              CLR.B    R1
@@ -10837,7 +10857,7 @@
 0:7d9e: a2 c0              BSET.B   #0, R2
 0:7da0: 15 f9 fa d2        BCLR.B   #2, @H'F9FA:16
 0:7da4: 15 f9 fa d3        BCLR.B   #3, @H'F9FA:16
-0:7da8: 1d f6 8c 05 01 90  CMP.W    #H'0190, @H'F68C:16
+0:7da8: 1d f6 8c 05 01 90  CMP.W    #H'0190, @BATSCI_SoC:16
 0:7dae: 27 04              BEQ      H'7DB4
 0:7db0: 53 ff              MOV.B    #H'FF, R3
 0:7db2: 20 02              BRA      H'7DB6
@@ -10848,7 +10868,7 @@
 0:7dbb: a2 c1              BSET.B   #1, R2
 0:7dbd: 15 f9 fa d2        BCLR.B   #2, @H'F9FA:16
 0:7dc1: 15 f9 fa d3        BCLR.B   #3, @H'F9FA:16
-0:7dc5: 1d f6 8c 05 02 58  CMP.W    #H'0258, @H'F68C:16
+0:7dc5: 1d f6 8c 05 02 58  CMP.W    #H'0258, @BATSCI_SoC:16
 0:7dcb: 27 04              BEQ      H'7DD1
 0:7dcd: 53 ff              MOV.B    #H'FF, R3
 0:7dcf: 20 02              BRA      H'7DD3
@@ -10859,7 +10879,7 @@
 0:7dd8: a2 c2              BSET.B   #2, R2
 0:7dda: 15 f9 fa d2        BCLR.B   #2, @H'F9FA:16
 0:7dde: 15 f9 fa d3        BCLR.B   #3, @H'F9FA:16
-0:7de2: 1d f6 8c 05 02 ee  CMP.W    #H'02EE, @H'F68C:16
+0:7de2: 1d f6 8c 05 02 ee  CMP.W    #H'02EE, @BATSCI_SoC:16
 0:7de8: 27 04              BEQ      H'7DEE
 0:7dea: 53 ff              MOV.B    #H'FF, R3
 0:7dec: 20 02              BRA      H'7DF0
