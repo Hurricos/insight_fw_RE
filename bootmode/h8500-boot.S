@@ -40,9 +40,9 @@ setup_serial:
     MOV.B    r0       , @SCI1SCR
     MOV.B    r0       , @SCI1SMR # 0 = CKS1 = CKS0, so system clock undivided
     MOV.B    #0x40:8  , @SCI1BRR # N = 64. At 10MHz CPU clock and with 0 CKS0/1, this is 4800 baud.
-    MOV.B    #0xc7:8  , r0
-    AND.B    @SCI1SSR , r0
-    MOV.B    r0       , @SCI1SSR
+    ;; MOV.B    #0xc7:8  , r0       # Clear any existing overrun, framing or parity errors.
+    ;; AND.B    @SCI1SSR , r0
+    ;; MOV.B    r0       , @SCI1SSR
     MOV.B    #0x30:8  , @SCI1SCR # 00110000 - Enable transmit and receive
 
 byte_loop:
