@@ -43,7 +43,7 @@ setup_serial:
     MOV.B    #0xc7:8  , r0
     AND.B    @SCI1SSR , r0
     MOV.B    r0       , @SCI1SSR
-    MOV.B    #0x30:8  , @SCI1SCR
+    MOV.B    #0x30:8  , @SCI1SCR # 00110000 - Enable transmit and receive
 
 byte_loop:
     MOV.W    #0x07D0  , r1
