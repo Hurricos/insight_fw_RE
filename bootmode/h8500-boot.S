@@ -40,7 +40,6 @@ setup_serial:
     MOV.B    r0       , @SCI1SCR
     MOV.B    r0       , @SCI1SMR
     MOV.B    #0x7:8   , @SCI1BRR
-    MOV.B    @SCI1RDR , r0
     MOV.B    #0xc7:8  , r0
     AND.B    @SCI1SSR , r0
     MOV.B    r0       , @SCI1SSR
@@ -62,46 +61,18 @@ FUN_SendChar:
     STM      (r0-r3)  , @-sp
     MOV.W    #SCI1SSR , r3
     MOV.B    r0       , r1
-    MOV.W    #0x200   , r2
-    MOV.B    #0xc7:8  , r0
-    AND.B    @r3      , r0
-    MOV.B    r0       , @r3
-    BTST.B   #0x6     , @r3
-    BEQ      LAB_f49c
-    ## PLAN: Why do we bother reading SCIRDR?
-    MOV.B    @SCI1RDR , r0
-    MOV.B    #0x87:8  , r0
-    AND.B    @r3      , r0
-    MOV.B    r0       , @r3
 
-LAB_f49c:
-    MOV.B    @0xfbfe  , r0
-    ADD.B    r1       , r0
-    MOV.B    r0       , @0xfbfe
+_SendChar_TXWait:
+    ## Loop until TDR is ready to accept a new byte to send:
+    BTST.B   #0x7     , @r3    # If TDRE=0, set Z=1,
+    BEQ      _SendChar_TXWait  # and loop back to _SendChar_TXWait
 
-LAB_f4a6:
-    BTST.B   #0x7     , @r3
-    BEQ      LAB_f4a6
     MOV.B    r1       , @SCI1TDR
-    MOV.B    #0x7f:8  , r0
-    AND.B    @r3      , r0
-    MOV.B    r0       , @r3
 
-LAB_f4b4:
-    MOV.B    #0xc7:8  , r0
-    AND.B    @r3      , r0
-    MOV.B    r0       , @r3
-    BTST.B   #0x6     , @r3
-    BEQ      LAB_f4cc
-    MOV.B    @SCI1RDR , r0
-    MOV.B    #0x87:8  , r0
-    AND.B    @r3      , r0
-    MOV.B    r0       , @r3
+    ## Clear the SSR TDRE bit
+    ## PLAN: Isn't TDRE already unset when you copy something into the TDR?
+    BCLR.B   #0x7     , @r3
     LDM      @sp+     , (r0-r3)
     RTS
-    
-LAB_f4cc:
-    SCB/f    r2       , LAB_f4b4
-    LDM      @sp+     , (r0-r3)
-    RTS
-## END: FUN_SendChar
+
+    ## END: FUN_SendChar
