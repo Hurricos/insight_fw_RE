@@ -1,5 +1,5 @@
 %.o: %.S
-	dir=`mktemp -d`; cp -t $$dir $^; \
+	dir=`mktemp -d`; cp -t $$dir $^; sed -i 's/;.*//' $$dir/$^; \
 	podman run -v $$dir/:/build/:Z --rm -it h8500-as:latest /bin/bash -c "cd /build/; as -o $@ $<" && cp $$dir/$@ $@; \
 	rm -r $$dir;
 
