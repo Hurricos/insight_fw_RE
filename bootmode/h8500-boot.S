@@ -31,6 +31,9 @@
 .set RAMCR,   0xff15
 .set MDCR,    0xff19
 
+.set EBR1, 0xFEE2
+.set EBR2, 0xFEE3
+    
 start:
     LDC.W    #0x0700  , sr
     CLR.B    @WCR
@@ -51,6 +54,7 @@ byte_loop:
     BSR      FUN_SendChar
     SCB/f    r1       , byte_loop
 
+NGEND:  
 infinite_loop:
     BRA      infinite_loop
 
@@ -76,3 +80,35 @@ _SendChar_TXWait:
     RTS
 
     ## END: FUN_SendChar
+
+FUN_ProgramByte:
+    STM      (r0-r3)  , @-sp
+                                 ;; LDC.B #FE, BR ;Set base register
+_ProgramByte_PRGM:
+    MOV.W #0001, r0              ;Program-verify fail count
+_ProgramByte_PRGMS:
+    MOV.B r3, @r2                ;Dummy write
+    MOV.W #0xA578, @TCSR         ;Start watchdog timer
+    MOV.W #0xa, r1               ;Set program loop counter
+    MOV.B #0x01, @FLMCR:8        ;Set P bit
+_ProgramByte_LOOP1:
+    SCB/f r1, _ProgramByte_LOOP1 ;Program
+    CLR.B @FLMCR:8               ;Clear P bit
+    MOV.W #0xA500, @TCSR         ;Stop watchdog timer
+    MOV.W #0xb , r1              ;Set program-verify loop counter
+    MOV.B #04, @FLMCR:8          ;Set PV bit
+_ProgramByte_LOOP2:
+    SCB/f r1, _ProgramByte_LOOP2 ;Wait
+    MOV.B @r2, r1                ;Read programmed address
+    CMP.B r3, r1                 ;Compare programmed data with read data
+    BEQ _ProgramByte_PV0K        ;Program-verify decision
+_ProgramByte_PVNG:
+    CLR.B @FLMCR:8               ;Clear PV bit
+    CMP.W #0x0014, r0            ;Program-verify executed 20 times?
+    BEQ NGEND                    ;If program-verify executed 20 times, branch to NGEND
+    ADD.W #0x1, r0               ;Increment program-verify fail count in r0
+    BRA _ProgramByte_PRGMS       ;Program again
+_ProgramByte_PV0K:
+    CLR.B @FLMCR:8               ;Clear PV bit
+    LDM      @sp+, (r0-r3)
+    RTS
