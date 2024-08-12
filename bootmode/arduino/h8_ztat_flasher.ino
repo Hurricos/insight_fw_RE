@@ -1,5 +1,5 @@
 // Programming voltage switch pin
-#define VPP 2
+#define VPP A0
 // !VCC pin
 #define nVCC A5
 // Latch pull-down pin
@@ -13,7 +13,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println("                      "); // Small flush for the Arduino's IDE serial monitor
-  pinMode( 2, OUTPUT );
+  pinMode( VPP, OUTPUT );
   pinMode( nVCC, OUTPUT );
   pinMode( LAT, INPUT );
 
