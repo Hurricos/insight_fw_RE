@@ -657,9 +657,6 @@
   (junction (at 176.53 91.44) (diameter 0) (color 0 0 0 0)
     (uuid 0a1c423e-58ed-4bea-abc5-dd118f9c5515)
   )
-  (junction (at 176.53 93.98) (diameter 0) (color 0 0 0 0)
-    (uuid 158c54fd-47b2-4590-8c0e-92d388d2c5dd)
-  )
   (junction (at 165.1 86.36) (diameter 0) (color 0 0 0 0)
     (uuid 6194ec44-b8d5-4051-9118-9694ec667d0c)
   )
@@ -690,10 +687,6 @@
   (wire (pts (xy 148.59 91.44) (xy 157.48 91.44))
     (stroke (width 0) (type default))
     (uuid 1bfc8cd0-9ebc-4ab1-9e4d-e820b42b6d48)
-  )
-  (wire (pts (xy 176.53 93.98) (xy 176.53 96.52))
-    (stroke (width 0) (type default))
-    (uuid 2800c577-4a98-49d9-9de2-c4968f677907)
   )
   (wire (pts (xy 154.94 109.22) (xy 157.48 109.22))
     (stroke (width 0) (type default))
@@ -829,32 +822,6 @@
     (uuid e1434143-0e2f-4257-9382-b44bc257a93c)
   )
 
-  (symbol (lib_id "Device:R") (at 180.34 96.52 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 067470b6-9d08-4907-b88f-9f70783f092f)
-    (property "Reference" "R6" (at 180.34 99.06 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "10k0" (at 180.34 96.52 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 180.34 98.298 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 180.34 96.52 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid b6f585b3-1a2c-4ed0-9824-2ba3d39900b0))
-    (pin "2" (uuid 0a0684fd-c975-48f9-a83a-2dffe35736b6))
-    (instances
-      (project "flasher"
-        (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
-          (reference "R6") (unit 1)
-        )
-      )
-    )
-  )
-
   (symbol (lib_id "Connector_Generic:Conn_02x05_Counter_Clockwise") (at 85.09 101.6 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 089c8861-5929-4f69-b57f-a0cca4f7d2b7)
@@ -881,7 +848,7 @@
     (pin "4" (uuid d6da327f-ca52-4ee3-975d-556fabacfe36))
     (pin "8" (uuid 2577ac24-dd1a-478c-af76-c8e255ee87a4))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "J1") (unit 1)
         )
@@ -906,7 +873,7 @@
     )
     (pin "1" (uuid 9188bd8b-b1c7-4c05-acb7-009ac2e677c8))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "#PWR03") (unit 1)
         )
@@ -942,7 +909,7 @@
     (pin "2" (uuid b304271a-3b59-4dc1-88d2-22c695c32f4b))
     (pin "3" (uuid 9d86e6ec-6a06-4905-b22e-95a92e106fe5))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "Q3") (unit 1)
         )
@@ -996,7 +963,7 @@
     (pin "3" (uuid 3f72111b-d812-4d6f-96ca-3870fb50e8ca))
     (pin "20" (uuid 1f71e5f8-17c1-4fbe-867a-ad81a5181f9a))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "A1") (unit 1)
         )
@@ -1022,7 +989,7 @@
     (pin "1" (uuid e46d0222-09ee-4a3e-98e2-612df013622b))
     (pin "2" (uuid 9c68dbfd-b228-46b9-83a8-53a28ba5e532))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "R5") (unit 1)
         )
@@ -1047,7 +1014,7 @@
     )
     (pin "1" (uuid 95f3021d-217a-4185-855d-cd5cd28dbe36))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "#PWR02") (unit 1)
         )
@@ -1072,7 +1039,7 @@
     )
     (pin "1" (uuid 5dc7cbb7-18a8-4823-8243-70be1d0a80ce))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "#PWR01") (unit 1)
         )
@@ -1098,7 +1065,7 @@
     (pin "2" (uuid 61a0ed70-448b-41a5-9757-5a373c8170e9))
     (pin "1" (uuid fd08e34d-d3ae-4c69-a952-d3d8a283c9c9))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "R2") (unit 1)
         )
@@ -1124,7 +1091,7 @@
     (pin "1" (uuid 386e38b5-8a06-4757-8e1e-84a341535415))
     (pin "2" (uuid 51fedae4-407c-4c8f-adcf-0dca09a1da47))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "R1") (unit 1)
         )
@@ -1160,7 +1127,7 @@
     (pin "2" (uuid eb869eb5-3253-4fc7-892d-357fd69737cd))
     (pin "3" (uuid c41deca1-c460-4676-8206-02bf8282d366))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "Q1") (unit 1)
         )
@@ -1186,7 +1153,7 @@
     (pin "2" (uuid eeb2970f-1426-4e9f-bb8b-a0a3749471d5))
     (pin "1" (uuid 6594153e-c85a-49ea-b2c3-16ee43b081b9))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "R3") (unit 1)
         )
@@ -1212,7 +1179,7 @@
     (pin "1" (uuid cbd7b0bd-cad5-42ae-8223-a80b8bbe5af8))
     (pin "2" (uuid 4cd5e3a5-915b-430c-ac54-195539fb645a))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "R4") (unit 1)
         )
@@ -1248,7 +1215,7 @@
     (pin "3" (uuid b229ffc3-04fa-4047-904f-e59e5d834078))
     (pin "2" (uuid 7d48702f-05bb-41ec-93d2-ca89f516518a))
     (instances
-      (project "flasher"
+      (project "h8_ztat_flasher"
         (path "/27b5d8bd-cefd-4a1e-8ed3-661b96ace440"
           (reference "Q2") (unit 1)
         )
