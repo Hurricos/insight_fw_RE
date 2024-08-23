@@ -1,3 +1,13 @@
+# Architecture
+
+The H8/538F reprogramming system replaces the Hitachi F-ZTAT programmer. It allows a user to rewrite the firmware of a Gen1 Honda Insight BCM or MCM.
+
+It is composed of:
+
+- The MCM or BCM module.
+- An Arduino-based programmer, equipped with a 12V and 5V power supply
+- A PC
+
 # Software
 
 ## Command Frame
