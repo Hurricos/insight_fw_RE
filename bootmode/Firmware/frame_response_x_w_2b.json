@@ -1,0 +1,4 @@
+[
+  { "name": "CSUM",   "bits": 8, "type": 2 },
+  { "name": "STATUS", "bits": 8, "type": 1 }
+]

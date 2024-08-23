@@ -1,0 +1,7 @@
+[
+  { "name": "CSUM", "bits": 8, "type": 2 },
+  { "name": "STF",  "bits": 1, "type": 3 },
+  { "name": "Clear", "bits": 4 },
+  { "name": "CMD",   "bits": 3, "type": 4 },
+  { "name": "ARG", "bits": 16, "type": 1 }
+]

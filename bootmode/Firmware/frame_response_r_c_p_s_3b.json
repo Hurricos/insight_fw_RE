@@ -1,0 +1,5 @@
+[
+  { "name": "CSUM",   "bits": 8, "type": 2 },
+  { "name": "LSB", "bits": 8, "type": 1 },
+  { "name": "MSB", "bits": 8, "type": 1 }
+]

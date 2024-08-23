@@ -10,3 +10,12 @@ reset_serial:
 	echo 0 | tee $$(grep -e 'Prolific' /sys/bus/usb/devices/*/manufacturer | cut -d/ -f1-6)/bConfigurationValue;
 	sleep 0.1s;
 	echo 1 | tee $$(grep -e 'Prolific' /sys/bus/usb/devices/*/manufacturer | cut -d/ -f1-6)/bConfigurationValue;
+
+frame_%b.svg: frame_%b.json
+	n=$*; bit_field --lanes $${n##*_} $< > $@ || rm -f $@;
+
+.PHONY: images clean
+images: frame_response_r_c_p_s_3b.svg frame_response_x_w_2b.svg frame_command_4b.svg
+
+clean:
+	rm -vf *.svg
